@@ -54,7 +54,7 @@ Developed for SDK version 16 (Android 4.1 Jelly Bean) and above.
 To test this library, it's pretty simple !
 
 - Create a directory and open a terminal inside
-- Run `git clone https://github.com/DantSu/ESCPOS-ThermalPrinter-Android.git .`
+- Run `git clone https://github.com/sebasnaa/MC_DB.git .`
 - Open the directory with Android Studio
 - Test it !
 
