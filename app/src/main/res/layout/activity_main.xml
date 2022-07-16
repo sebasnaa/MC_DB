@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/NombreCliente"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="Nombre Cliente"
+        android:gravity="center"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/DireccionCliente"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="Direccion"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/NombreCliente" />
+
+    <Button
+        android:id="@+id/btn_agregar"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="52dp"
+        android:text="Agregar Cliente"
+        app:layout_constraintEnd_toStartOf="@+id/btn_buscar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TelefonoCliente"
+        android:layout_marginLeft="16dp" />
+
+    <EditText
+        android:id="@+id/TelefonoCliente"
+        style="@style/Widget.AppCompat.AutoCompleteTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:ems="10"
+        android:hint="Teléfono"
+        android:inputType="number"
+        android:maxLength="9"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DireccionCliente" />
+
+    <Button
+        android:id="@+id/btn_buscar"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="99dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="16dp"
+        android:text="Buscar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_agregar"
+        app:layout_constraintTop_toBottomOf="@+id/TelefonoCliente"
+        android:layout_marginLeft="99dp"
+        android:layout_marginRight="16dp" />
+
+
+    <Button
+        android:id="@+id/btn_eliminar"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="28dp"
+        android:text="Eliminar Cliente"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_marcar_pedido"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Marcar Pedido"
+        app:layout_constraintEnd_toStartOf="@+id/btn_home_user"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_agregar"
+        android:layout_marginLeft="16dp" />
+
+    <Button
+        android:id="@+id/btn_home_user"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="148dp"
+        android:text="Inicio"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.94"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TelefonoCliente" />
+
+    <Button
+        android:id="@+id/btn_home_admin"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="99dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:text="Inicio"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/btn_marcar_pedido"
+        app:layout_constraintTop_toBottomOf="@+id/btn_buscar"
+        android:layout_marginLeft="99dp"
+        android:layout_marginRight="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

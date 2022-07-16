@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ScrollView
+        android:id="@+id/scrollView3"
+        android:layout_width="397dp"
+        android:layout_height="362dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="230dp"
+        android:background="#F4F4F4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <HorizontalScrollView
+            android:id="@+id/hscrll3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/RelativeLayout3"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TableLayout
+                    android:id="@+id/table_balances"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="64dp"></TableLayout>
+            </RelativeLayout>
+        </HorizontalScrollView>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_inicio_balance"
+        android:layout_width="170dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="404dp"
+        android:text="Inicio"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.88"
+        app:layout_constraintStart_toEndOf="@+id/btn_completo_balance"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="120dp"
+        android:layout_marginRight="404dp" />
+
+    <Button
+        android:id="@+id/btn_completo_balance"
+        android:layout_width="170dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="68dp"
+        android:text="Balance"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.933"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="170dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="52dp"
+        android:gravity="center"
+        android:text="Fecha"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/btn_completo_balance"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="52dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

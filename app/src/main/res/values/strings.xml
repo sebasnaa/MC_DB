@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">McF</string>
+    <string name="Telefono">000000000</string>
+
+
+
+
+    <string name="login_form_title">Acceso</string>
+    <string name="login_form_username">Username</string>
+    <string name="login_form_password">Password</string>
+    <string name="login_form_login">Acceder</string>
+
+    <string name="confirmacion_pedido">Confirmación Pedido</string>
+
+    <string name="confirmar">Confirmar</string>
+
+    <string name="cancelar">Cancelar</string>
+
+
+</resources>
