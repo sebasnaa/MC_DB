@@ -25,7 +25,7 @@ public class Balances extends AppCompatActivity {
 
     DataBaseOperation db = new DataBaseOperation(Balances.this);
 
-    Button btn_completo_balance,btn_inicio_balance;
+    Button btn_completo_balance;
 
 
     TextView textView2;
@@ -39,7 +39,6 @@ public class Balances extends AppCompatActivity {
         setContentView(R.layout.view_balance);
 
         btn_completo_balance = findViewById(R.id.btn_completo_balance);
-        btn_inicio_balance = findViewById(R.id.btn_inicio_balance);
 
         textView2 = findViewById(R.id.textView2);
 
@@ -57,14 +56,6 @@ public class Balances extends AppCompatActivity {
 
 
 
-        btn_inicio_balance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(Balances.this,OpcionesAdmin.class);
-                startActivity(intent);
-            }
-        });
 
         textView2.setOnClickListener(new View.OnClickListener() {
             @Override

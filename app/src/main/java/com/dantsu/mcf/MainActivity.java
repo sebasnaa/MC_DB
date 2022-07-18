@@ -33,6 +33,7 @@ import com.dantsu.mcf.async.AsyncEscPosPrint;
 import com.dantsu.mcf.async.AsyncEscPosPrinter;
 import com.dantsu.mcf.async.AsyncUsbEscPosPrint;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,10 +43,17 @@ public class MainActivity extends AppCompatActivity {
     Button btn_agregar,btn_buscar,btn_eliminar,btn_mostrar_clientes,btn_marcar_pedido,btn_home_user,btn_home_admin;
     EditText et_nombre,et_direccion,et_telefono;
 
+    Button btn_print;
+
+    private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+
+
 
 
     private static final String TAG = "Main";
     private boolean superUserStatus = false;
+
+    private ArrayList<String> datosTicket = new ArrayList<>();
 
     private boolean getUserStatus() {
         Intent intent = getIntent();
@@ -73,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         et_direccion = findViewById(R.id.DireccionCliente);
         et_telefono = findViewById(R.id.TelefonoCliente);
 
+        btn_print = findViewById(R.id.imprimirUltimo);
+
 
         if(!superUserStatus){
             //Toast.makeText(getApplicationContext(), "Junior", Toast.LENGTH_SHORT).show();
@@ -84,7 +94,18 @@ public class MainActivity extends AppCompatActivity {
             btn_home_user.setVisibility(View.GONE);
         }
 
+        Intent intent = getIntent();
 
+        datosTicket = intent.getStringArrayListExtra("datosTickect");
+
+        btn_print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                printUsb();
+
+            }
+        });
 
 
         btn_marcar_pedido.setOnClickListener(new View.OnClickListener() {
@@ -295,4 +316,128 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    public void printUsb() {
+        UsbConnection usbConnection = UsbPrintersConnections.selectFirstConnected(this);
+        UsbManager usbManager = (UsbManager) this.getSystemService(Context.USB_SERVICE);
+
+        if (usbConnection == null || usbManager == null) {
+            new AlertDialog.Builder(this)
+                    .setTitle("USB Connection")
+                    .setMessage("No USB printer found.")
+                    .show();
+            return;
+        }
+
+        PendingIntent permissionIntent = PendingIntent.getBroadcast(
+                this,
+                0,
+                new Intent(MainActivity.ACTION_USB_PERMISSION),
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S ? PendingIntent.FLAG_MUTABLE : 0
+        );
+        IntentFilter filter = new IntentFilter(MainActivity.ACTION_USB_PERMISSION);
+        registerReceiver(this.usbReceiver, filter);
+        usbManager.requestPermission(usbConnection.getDevice(), permissionIntent);
+
+    }
+
+    private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (MainActivity.ACTION_USB_PERMISSION.equals(action)) {
+                synchronized (this) {
+                    UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+                    UsbDevice usbDevice = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if (usbManager != null && usbDevice != null) {
+                            new AsyncUsbEscPosPrint(
+                                    context,
+                                    new AsyncEscPosPrint.OnPrintFinished() {
+                                        @Override
+                                        public void onError(AsyncEscPosPrinter asyncEscPosPrinter, int codeException) {
+                                            Log.e("Async.OnPrintFinished", "AsyncEscPosPrint.OnPrintFinished : An error occurred !");
+                                        }
+
+                                        @Override
+                                        public void onSuccess(AsyncEscPosPrinter asyncEscPosPrinter) {
+                                            Log.i("Async.OnPrintFinished", "AsyncEscPosPrint.OnPrintFinished : Print is finished !");
+                                        }
+                                    }
+                            )
+                                    .execute(getAsyncEscPosPrinter(new UsbConnection(usbManager, usbDevice)));
+
+                            new AsyncUsbEscPosPrint(
+                                    context,
+                                    new AsyncEscPosPrint.OnPrintFinished() {
+                                        @Override
+                                        public void onError(AsyncEscPosPrinter asyncEscPosPrinter, int codeException) {
+                                            Log.e("Async.OnPrintFinished", "AsyncEscPosPrint.OnPrintFinished : An error occurred !");
+                                        }
+
+                                        @Override
+                                        public void onSuccess(AsyncEscPosPrinter asyncEscPosPrinter) {
+                                            Log.i("Async.OnPrintFinished", "AsyncEscPosPrint.OnPrintFinished : Print is finished !");
+                                        }
+                                    }
+                            )
+                                    .execute(getAsyncEscPosPrinter(new UsbConnection(usbManager, usbDevice)));
+                        }
+                        //puesto sebas
+                        unregisterReceiver(usbReceiver);
+                    }
+                }
+            }
+        }
+    };
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @SuppressLint("SimpleDateFormat")
+    public AsyncEscPosPrinter getAsyncEscPosPrinter(DeviceConnection printerConnection) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
+        AsyncEscPosPrinter printer = new AsyncEscPosPrinter(printerConnection, 203, 80f, 40);
+        DataBaseOperation db = new DataBaseOperation(MainActivity.this);
+
+        int numeroPedido = db.contarPedidos();
+
+        return printer.addTextToPrint(
+                "[L]\n" +
+                        "[C]<u><font size='big'>PEDIDO N°0" + numeroPedido + "</font></u>\n" +
+                        "[L]\n" +
+                        "[C]<u type='double'>" + format.format(new Date()) + "</u>\n" +
+                        "[C]\n" +
+                        "[R]      ================================\n" +
+                        "[L]\n" +
+                        "[L]<b>Dirección: </b>\n" +
+                        "[L]  + " + this.datosTicket.get(0) + "\n" +
+                        "[L]\n" +
+                        "[L]<b>Teléfono: </b>\n" +
+                        "[L]  + " + this.datosTicket.get(1) + "\n" +
+                        "[L]\n" +
+                        "[L]<b>Nombre: </b>\n" +
+                        "[L]  + " + this.datosTicket.get(2) + "\n" +
+                        "[L]\n" +
+                        "[C]      --------------------------------\n" +
+                        "[C]      --------------------------------\n" +
+                        "[R]<b>    T. pedido -> </b>  " + datosTicket.get(6) + "\n" +
+                        "[R]<b>    Método pago -> </b>  " + datosTicket.get(7) + "\n" +
+                        "[C]      --------------------------------\n" +
+                        "[C]      --------------------------------\n" +
+                        "[R]         Importe -> [R]" + this.datosTicket.get(3) + " €\n" +
+                        "[L]\n" +
+                        "[R]         Cliente entrega -> [R]" + this.datosTicket.get(4) + " €\n" +
+                        "[L]\n" +
+                        "[R]         Devolver -> [R]" + this.datosTicket.get(5) + " €\n" +
+                        "[L]\n" +
+                        "[C]      ================================\n" +
+                        "[L]\n" +
+                        "[L]\n" +
+                        "[L]\n" +
+                        "[L]\n"
+
+        );
+
+
+    }
 }

@@ -58,10 +58,8 @@ public class Loggin extends AppCompatActivity {
 
         String id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-// sebas 6492b67f86e8ef3a
+    establecerConexonUsb();
 
-
-        establecerConexonUsb();
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +77,8 @@ public class Loggin extends AppCompatActivity {
 
                     //&& id.equals("6492b67f86e8ef3a")
 
-                    if(usernameEditText.getText().toString().trim().equals("a") && passwordEditText.getText().toString().trim().equals("a") ){
+                    if(usernameEditText.getText().toString().trim().equals("mando") && passwordEditText.getText().toString().trim().equals("mando") ){
+                        Toast.makeText(getApplicationContext(), "No la lies", Toast.LENGTH_SHORT).show();
 
                         setSuperUserStatus(1);
 
@@ -90,8 +89,8 @@ public class Loggin extends AppCompatActivity {
 
                         startActivity(intent);
 
-                    }else if(usernameEditText.getText().toString().trim().equals("j") && passwordEditText.getText().toString().trim().equals("j")){
-                        Toast.makeText(getApplicationContext(), "Bunny logged", Toast.LENGTH_SHORT).show();
+                    }else if(usernameEditText.getText().toString().trim().equals("mc") && passwordEditText.getText().toString().trim().equals("mc")){
+                        Toast.makeText(getApplicationContext(), "Bunny dentro", Toast.LENGTH_SHORT).show();
                         setSuperUserStatus(404);
                         credencialesUsuario = false;
                         Intent intent = new Intent(Loggin.this, OpcionesUser.class);
@@ -197,8 +196,8 @@ public class Loggin extends AppCompatActivity {
                                             Log.i("Async.OnPrintFinished", "AsyncEscPosPrint.OnPrintFinished : Conexión correcta !");
                                         }
                                     }
-                            )
-                                    .execute(getAsyncEscPosPrinter(new UsbConnection(usbManager, usbDevice)));
+                            );
+//                                    .execute(getAsyncEscPosPrinter(new UsbConnection(usbManager, usbDevice)));
                         }
                         //puesto sebas
                         unregisterReceiver(usbReceiver);
@@ -208,28 +207,19 @@ public class Loggin extends AppCompatActivity {
         }
     };
 
-    /**
-     * Asynchronous printing
-     */
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @SuppressLint("SimpleDateFormat")
-    public AsyncEscPosPrinter getAsyncEscPosPrinter(DeviceConnection printerConnection) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
-        AsyncEscPosPrinter printer = new AsyncEscPosPrinter(printerConnection, 203, 80f, 32);
-        return printer.addTextToPrint(
-                "[L]\n" +
-
-                        "[C]Conexión correcta\n" +
-                        "[L]\n" +
-                        "[L]\n" +
-                        "[L]\n" +
-                        "[L]\n"
-
-        );
-
-
-
-    }
+//    /**
+//     * Asynchronous printing
+//     */
+//    @RequiresApi(api = Build.VERSION_CODES.N)
+//    @SuppressLint("SimpleDateFormat")
+//    public AsyncEscPosPrinter getAsyncEscPosPrinter(DeviceConnection printerConnection) {
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
+//        AsyncEscPosPrinter printer = new AsyncEscPosPrinter(printerConnection, 203, 80f, 32);
+//        return printer.addTextToPrint("");
+//
+//
+//
+//    }
 
 
 

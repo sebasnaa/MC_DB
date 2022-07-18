@@ -8,6 +8,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 31
         versionCode libraryVersionCode
         versionName libraryVersionName

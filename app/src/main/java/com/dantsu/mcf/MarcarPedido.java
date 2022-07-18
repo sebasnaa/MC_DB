@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.icu.text.DecimalFormat;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
@@ -149,14 +150,18 @@ public class MarcarPedido extends AppCompatActivity {
 
 
         btn_confirmar_pedido.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-
+                DecimalFormat df = new DecimalFormat("0.00");
                 int telefono = Integer.parseInt(et_telefono.getText().toString());
                 String tipo = getTipoPedido();
                 double importe = Double.parseDouble(et_importe_pedido.getText().toString());
                 double entregaCliente = Double.parseDouble(et_entrega_dinero.getText().toString());
                 double devolver = entregaCliente -  importe;
+                double scale = Math.pow(10, 2);
+                devolver = Math.round(devolver * scale) / scale;
+
                 String metodoPago = getMetodoPago();
 
                 ModeloPedido moPedido = new ModeloPedido(-1,telefono,tipo,importe,metodoPago,"");
@@ -212,7 +217,7 @@ public class MarcarPedido extends AppCompatActivity {
 
 
                             Intent intent = new Intent(MarcarPedido.this,MainActivity.class);
-                            //intent.putExtra("superUserStatus",superUser);
+                            intent.putExtra("datosTickect",datosTicket);
                             startActivity(intent);
                         }else{
                             Toast.makeText(MarcarPedido.this, "Error,no agregado",
@@ -247,6 +252,22 @@ public class MarcarPedido extends AppCompatActivity {
                     UsbDevice usbDevice = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         if (usbManager != null && usbDevice != null) {
+                            new AsyncUsbEscPosPrint(
+                                    context,
+                                    new AsyncEscPosPrint.OnPrintFinished() {
+                                        @Override
+                                        public void onError(AsyncEscPosPrinter asyncEscPosPrinter, int codeException) {
+                                            Log.e("Async.OnPrintFinished", "AsyncEscPosPrint.OnPrintFinished : An error occurred !");
+                                        }
+
+                                        @Override
+                                        public void onSuccess(AsyncEscPosPrinter asyncEscPosPrinter) {
+                                            Log.i("Async.OnPrintFinished", "AsyncEscPosPrint.OnPrintFinished : Print is finished !");
+                                        }
+                                    }
+                            )
+                                    .execute(getAsyncEscPosPrinter(new UsbConnection(usbManager, usbDevice)));
+
                             new AsyncUsbEscPosPrint(
                                     context,
                                     new AsyncEscPosPrint.OnPrintFinished() {
@@ -303,14 +324,18 @@ public class MarcarPedido extends AppCompatActivity {
     @SuppressLint("SimpleDateFormat")
     public AsyncEscPosPrinter getAsyncEscPosPrinter(DeviceConnection printerConnection) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
-        AsyncEscPosPrinter printer = new AsyncEscPosPrinter(printerConnection, 203, 80f, 32);
+        AsyncEscPosPrinter printer = new AsyncEscPosPrinter(printerConnection, 203, 80f, 40);
+        DataBaseOperation db = new DataBaseOperation(MarcarPedido.this);
+
+        int numeroPedido = db.contarPedidos();
+
         return printer.addTextToPrint(
                     "[L]\n" +
-                        "[R]<u><font size='big'>PEDIDO N°045</font></u>\n" +
+                        "[C]<u><font size='big'>PEDIDO N°0"+numeroPedido+"</font></u>\n" +
                         "[L]\n" +
-                        "[R]<u type='double'>" + format.format(new Date()) + "</u>\n" +
+                        "[C]<u type='double'>" + format.format(new Date()) + "</u>\n" +
                         "[C]\n" +
-                        "[R]================================\n" +
+                        "[R]      ================================\n" +
                         "[L]\n" +
                         "[L]<b>Dirección: </b>\n" +
                         "[L]  + "+this.datosTicket.get(0)+"\n" +
@@ -321,19 +346,19 @@ public class MarcarPedido extends AppCompatActivity {
                         "[L]<b>Nombre: </b>\n" +
                         "[L]  + " + this.datosTicket.get(2) +"\n" +
                         "[L]\n" +
-                        "[C]--------------------------------\n" +
-                        "[C]--------------------------------\n" +
-                        "[L]<b>T. pedido -> </b>  " + datosTicket.get(6) +"\n" +
-                        "[L]<b>Método pago -> </b>  " + datosTicket.get(7) +"\n" +
-                        "[C]--------------------------------\n" +
-                        "[C]--------------------------------\n" +
-                        "[R] Importe -> [R]"+ this.datosTicket.get(3) +" €\n" +
+                        "[C]      --------------------------------\n" +
+                        "[C]      --------------------------------\n" +
+                        "[R]<b>    T. pedido -> </b>  " + datosTicket.get(6) +"\n" +
+                        "[R]<b>    Método pago -> </b>  " + datosTicket.get(7) +"\n" +
+                        "[C]      --------------------------------\n" +
+                        "[C]      --------------------------------\n" +
+                        "[R]         Importe -> [R]"+ this.datosTicket.get(3) +" €\n" +
                         "[L]\n" +
-                        "[R] Cliente entrega -> [R]"+ this.datosTicket.get(4) +" €\n" +
+                        "[R]         Cliente entrega -> [R]"+ this.datosTicket.get(4) +" €\n" +
                         "[L]\n" +
-                        "[R] Devolver -> [R]"+ this.datosTicket.get(5) +" €\n" +
+                        "[R]         Devolver -> [R]"+ this.datosTicket.get(5) +" €\n" +
                         "[L]\n" +
-                        "[C]================================\n" +
+                        "[C]      ================================\n" +
                         "[L]\n" +
                         "[L]\n" +
                         "[L]\n" +

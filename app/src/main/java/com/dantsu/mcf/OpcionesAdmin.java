@@ -32,7 +32,7 @@ import com.dantsu.mcf.async.AsyncUsbEscPosPrint;
 
 public class OpcionesAdmin extends AppCompatActivity {
 
-    Button btn_edicion,btn_mostra_clientes,btn_mostrar_pedidos,btn_cerrar_sesion,btn_balance,btn_print;
+    Button btn_edicion,btn_mostra_clientes,btn_mostrar_pedidos,btn_cerrar_sesion,btn_balance;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,21 +45,12 @@ public class OpcionesAdmin extends AppCompatActivity {
         btn_mostrar_pedidos = findViewById(R.id.btn_mostrar_pedidos_opcion);
         btn_cerrar_sesion = findViewById(R.id.btn_cerrar_sesion);
         btn_balance = findViewById(R.id.btn_balance);
-        btn_print = findViewById(R.id.buttonPrint);
 
 
         Intent intent = getIntent();
         boolean superUser = intent.getBooleanExtra("superUserStatus",false);
 
-        btn_print.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("Hola sebas");
 
-
-
-            }
-        });
 
 
         btn_edicion.setOnClickListener(new View.OnClickListener() {

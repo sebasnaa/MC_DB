@@ -19,7 +19,9 @@ import java.util.LinkedList;
 public class DataBaseOperation extends SQLiteOpenHelper {
 
     public static  final String TABLA_CLIENTES = "TABLA_CLIENTES";
+    public static  final String TABLA_RAIDERS = "TABLA_RAIDERS";
     public static  final String TABLA_PEDIDOS = "TABLA_PEDIDOS";
+    public static  final String TABLA_PEDIDOS_PENDIENTES = "TABLA_PEDIDOS_PENDIENTES";
     public static  final String TABLA_DESCUENTOS = "TABLA_DESCUENTOS";
     public static final String COLUMNA_NOMBRE_CLIENTE = "NOMBRE_CLIENTE";
     public static final String COLUMNA_DIRECCION_CLIENTE = "DIRECCION_CLIENTE";
@@ -29,6 +31,7 @@ public class DataBaseOperation extends SQLiteOpenHelper {
     public static final String COLUMNA_PRECIO_DESCUENTO = "PRECIO_DESCUENTO";
     public static final String COLUMNA_FECHA_PEDIDO = "FECHA_PEDIDO";
     public static final String COLUMNA_METODO_PAGO = "METODO_PAGO";
+    public static final String NOMBRE_RAIDER = "NOMBRE_RAIDER";
 
     public DataBaseOperation(@Nullable Context context) {
         super(context, "clientes.db", null, 3);
@@ -50,9 +53,17 @@ public class DataBaseOperation extends SQLiteOpenHelper {
                 COLUMNA_PRECIO_DESCUENTO + " REAL ," + COLUMNA_METODO_PAGO + " TEXT ," +
                 COLUMNA_FECHA_PEDIDO + " DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) )";
 
+
+
+
+
+
+
+
         db.execSQL(createTableStatement);
         db.execSQL(createTablePedidos);
         db.execSQL(createTableDescuentos);
+
 
     }
 
@@ -265,6 +276,37 @@ public class DataBaseOperation extends SQLiteOpenHelper {
         res[1] = totalVentas;
 
         return res;
+
+    }
+
+
+    public int contarPedidos(){
+        String parametrosDescuentos[] = new String[1];
+        Calendar fechajavaLow = Calendar.getInstance();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String fechaLow = addZero(fechajavaLow.get(Calendar.YEAR),fechajavaLow.get(Calendar.MONTH)+1,fechajavaLow.get(Calendar.DATE))+ " 6:00:00";
+
+
+        parametrosDescuentos[0] = fechaLow;
+        Cursor cursor = db.rawQuery("",null);
+        cursor= db.rawQuery("SELECT COUNT (*) FROM " + TABLA_PEDIDOS + " WHERE " +COLUMNA_FECHA_PEDIDO+" < ? ",parametrosDescuentos);
+
+        int count = 0;
+        if(null != cursor){
+            if(cursor.getCount() > 0){
+                cursor.moveToFirst();
+                count = cursor.getInt(0);
+            }
+        }
+
+        cursor.close();
+
+
+        System.out.println("Hay pedidos en total " + count);
+        System.out.println("fecha " + fechaLow);
+
+        return count;
 
     }
 

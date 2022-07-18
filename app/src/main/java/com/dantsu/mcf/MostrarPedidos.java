@@ -27,15 +27,7 @@ public class MostrarPedidos extends AppCompatActivity {
         setContentView(R.layout.view_mostrar_pedidos);
 
 
-        botonMain = findViewById(R.id.btn_inicio_pedidos);
 
-        botonMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MostrarPedidos.this,OpcionesAdmin.class);
-                startActivity(intent);
-            }
-        });
 
         init();
 
