@@ -60,6 +60,7 @@ public class MarcarPedido extends AppCompatActivity {
 
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 
+    public double importeD = 0;
 
 
     @SuppressLint("WrongViewCast")
@@ -160,6 +161,8 @@ public class MarcarPedido extends AppCompatActivity {
                 double entregaCliente = Double.parseDouble(et_entrega_dinero.getText().toString());
                 double devolver = entregaCliente -  importe;
                 double scale = Math.pow(10, 2);
+
+                double importeDescuento = 0;
                 devolver = Math.round(devolver * scale) / scale;
 
                 String metodoPago = getMetodoPago();
@@ -203,8 +206,9 @@ public class MarcarPedido extends AppCompatActivity {
                         boolean exitoso = dataBaseOperation.agregarPedido(moPedido);
                         boolean exitosoDescuento = true;
                         if(sw_glovo.isChecked() && sw_descuento.isChecked() && et_descuento_aplicado.getText().toString().length() > 0){
-                            double importeDescuento = Double.parseDouble(et_descuento_aplicado.getText().toString());
+                            importeD = Double.parseDouble(et_descuento_aplicado.getText().toString());
                             exitosoDescuento = dataBaseOperation.agregarDescuentoPedido(getMetodoPago(),importeDescuento);
+                            datosTicket.add(""+importeDescuento);
                         }
 
 
@@ -218,6 +222,13 @@ public class MarcarPedido extends AppCompatActivity {
 
                             Intent intent = new Intent(MarcarPedido.this,MainActivity.class);
                             intent.putExtra("datosTickect",datosTicket);
+
+                            if(importeD > 0){
+                                intent.putExtra("descuento",importeD);
+                            }
+
+
+
                             startActivity(intent);
                         }else{
                             Toast.makeText(MarcarPedido.this, "Error,no agregado",
@@ -329,6 +340,16 @@ public class MarcarPedido extends AppCompatActivity {
 
         int numeroPedido = db.contarPedidos();
 
+        double descuento = 0;
+
+
+        if(importeD > 0){
+            descuento = importeD;
+        }
+
+        String descuentoCadena = "         Descuento -> [R]" + descuento + " €\n";
+
+
         return printer.addTextToPrint(
                     "[L]\n" +
                         "[C]<u><font size='big'>PEDIDO N°0"+numeroPedido+"</font></u>\n" +
@@ -357,6 +378,7 @@ public class MarcarPedido extends AppCompatActivity {
                         "[R]         Cliente entrega -> [R]"+ this.datosTicket.get(4) +" €\n" +
                         "[L]\n" +
                         "[R]         Devolver -> [R]"+ this.datosTicket.get(5) +" €\n" +
+                            descuentoCadena+
                         "[L]\n" +
                         "[C]      ================================\n" +
                         "[L]\n" +

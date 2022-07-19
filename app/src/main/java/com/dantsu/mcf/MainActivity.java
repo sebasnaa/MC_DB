@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 
-
+    private double importeD = 0;
 
 
     private static final String TAG = "Main";
@@ -97,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         datosTicket = intent.getStringArrayListExtra("datosTickect");
+
+
+        importeD = intent.getDoubleExtra("descuento",0);
+
 
         btn_print.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -400,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
         DataBaseOperation db = new DataBaseOperation(MainActivity.this);
 
         int numeroPedido = db.contarPedidos();
-
+        String descuentoCadena = "         Descuento -> [R]" + importeD + " €\n";
         return printer.addTextToPrint(
                 "[L]\n" +
                         "[C]<u><font size='big'>PEDIDO N°0" + numeroPedido + "</font></u>\n" +
@@ -429,6 +433,7 @@ public class MainActivity extends AppCompatActivity {
                         "[R]         Cliente entrega -> [R]" + this.datosTicket.get(4) + " €\n" +
                         "[L]\n" +
                         "[R]         Devolver -> [R]" + this.datosTicket.get(5) + " €\n" +
+                        descuentoCadena+
                         "[L]\n" +
                         "[C]      ================================\n" +
                         "[L]\n" +
